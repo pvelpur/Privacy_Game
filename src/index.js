@@ -3,6 +3,7 @@ const http = require('http')
 const path = require('path')
 const socketio = require('socket.io')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
+const { createNewGame, addUserToGame, removeUserFromGame } = require('./utils/gameLogic')
 
 const app = express()
 const server = http.createServer(app)
@@ -16,11 +17,30 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    socket.on('join', ({username, room}, callback) => {
-        const { error, user } = addUser({ id: socket.id, username, room, score: 0 })
+    socket.on('join', ({username, room, type}, callback) => {
+        const { error, user } = addUser({ id: socket.id, username, room})
 
         if(error) {
             return callback(error)
+        }
+        if(type === 'create'){
+            //add new game with error checking
+            console.log("create new game initiated")
+            const {error, game} = createNewGame(user)
+            if(error){
+                return callback(error)
+            }
+        }
+        else if(type === 'join'){
+            //add User To Existing Game with error checking
+            console.log("Join new game initiated")
+            const {error, game} = addUserToGame(user)
+            if(error){
+                return callback(error) //could be game is full or game not found
+            }
+        }
+        else{
+            return callback({error: 'Unknown Error please retry'})
         }
 
         socket.join(user.room)
@@ -45,13 +65,18 @@ io.on('connection', (socket) => {
         const user = removeUser(socket.id)
 
         if(user){
-            io.to(user.room).emit('message', `${user.username} has left!`)
+            removeUserFromGame(user)
+            //io.to(user.room).emit('message', `${user.username} has left!`)
             io.to(user.room).emit('roomData', {
                 room: user.room,
                 users: getUsersInRoom(user.room)
             })
         }
         
+    })
+
+    socket.on('userInput', ({username, room, optionYN, num}) => {
+        console.log(`server received ${username}'s input: ${optionYN} and ${num}`)
     })
 })
 

@@ -2,7 +2,7 @@ const users = []
 
 // addUser, removeUser, getUser, getUsersInRoom
 
-const addUser = ({id, username, room, score}) => {
+const addUser = ({id, username, room}) => {
     // Clean the data
     username = username.trim().toLowerCase()
     room = room.trim().toLowerCase()
@@ -26,23 +26,12 @@ const addUser = ({id, username, room, score}) => {
         }
     }
 
-    //Check existing users in the room (max = 6)
-    numUsersInRoom = users.filter((user) => {
-        return user.room === room
-    }).length
-    //console.log(numUsersInRoom)
-    if(numUsersInRoom === 6){
-        return {
-            error: 'Room is full'
-        }
-    }
 
     //Store the user
     const user = {
         id,
         username,
         room,
-        score
     }
 
     // TODO: Check number of players in Room (limit to 6)

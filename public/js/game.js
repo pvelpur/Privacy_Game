@@ -9,7 +9,7 @@ const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 
 //Options
 //object destructuring
-const {username, room} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+const {username, room, type} = Qs.parse(location.search, { ignoreQueryPrefix: true })
 
 
 document.querySelector('form.player-input').addEventListener('submit', function (e) {
@@ -19,9 +19,11 @@ document.querySelector('form.player-input').addEventListener('submit', function 
 
     for(i = 0; i < radioOption.length; i++) {
         if(radioOption[i].checked)
-            console.log(radioOption[i].value)
+            var optionYN = radioOption[i].value
     }
-    console.log(numYes[0].value)   
+    //console.log(numYes[0].value)
+    var num = numYes[0].value
+    socket.emit('userInput', {username, room, optionYN, num})   
 });
 
 socket.on('message', (message) => {
@@ -37,7 +39,7 @@ socket.on('roomData', ({ room, users }) => {
 })
 
 //server will listen for new joins
-socket.emit('join', {username, room}, (error) => {
+socket.emit('join', {username, room, type}, (error) => {
     if(error){
         alert(error)
         location.href = './'

@@ -13,7 +13,7 @@ const room = document.getElementById("room");
     else {
         // Check if there is already and existing game
 
-        window.location.href = `game.html?username=${username.value}&room=${room.value}&admin=true`
+        window.location.href = `game.html?username=${username.value}&room=${room.value}&type=create`
     }
   });
 
@@ -23,5 +23,5 @@ const room = document.getElementById("room");
         alert("Display Name and Room Name are Required!")
     }
     // Redirect to another HTML page
-    window.location.href = `game.html?username=${username.value}&room=${room.value}&admin=false`;
+    window.location.href = `game.html?username=${username.value}&room=${room.value}&type=join`;
   });
