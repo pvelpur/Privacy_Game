@@ -14,7 +14,24 @@
 
         </div>
         <div class="game__main">
-
+            <div class="card">
+                <div class="card-container">
+                    <h3>Do you like Pineapple on Pizza?</h3>
+                </div>
+            </div>
+            <form class="player-input">
+                <label>
+                    <input type="radio" name="QResp" value="yes" required>
+                    Yes
+                  </label>
+                  <label>
+                    <input type="radio" name="QResp" value="no" required>
+                    No
+                  </label>
+                <label for="numYes">Enter how many people you think will respond Yes: </label>
+                <input type="number" name="numYes" min="1" max="6" required>
+                <input type="submit">
+            </form>
         </div>
     </div>
 
