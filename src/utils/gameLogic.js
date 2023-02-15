@@ -1,15 +1,5 @@
 games = [];
 
-// //Check existing users in the room (max = 6)
-// numUsersInRoom = users.filter((user) => {
-//     return user.room === room
-// }).length
-// //console.log(numUsersInRoom)
-// if(numUsersInRoom === 6){
-//     return {
-//         error: 'Room is full'
-//     }
-// }
 
 const createNewGame = (user) =>{
     const existingGame = games.find((game) => {
@@ -25,8 +15,8 @@ const createNewGame = (user) =>{
         users: [{
             username: user.username,
             score: 0,
-            num: null,
-            option: null
+            numY: null,
+            optionYN: null
         }]
     }
     games.push(game);
@@ -42,13 +32,21 @@ const addUserToGame = (user) => {
             error: 'Game not found, please create new game'
         }
     }
+    //Check existing users in the room (max = 6)
+    numUsersInRoom = foundGame.users.length
+    //console.log("NUM USERS " + numUsersInRoom)
+    if(numUsersInRoom === 6){
+        return {
+            error: 'Room is full'
+        }
+    }
     foundGame.users.push({
         username:user.username, 
         score:0, 
-        num: null,
-        option: null
+        numY: null,
+        optionYN: null
     })
-    return {foundGame}
+    return {game : foundGame}
 }
 
 //Remove user from game 
@@ -58,36 +56,70 @@ const removeUserFromGame = (player) => {
     if(!userGame){
         return;
     }
-    const index = userGame.users.findIndex((user) => user.username === player.username)
-
-    //TODO: Add logic to check if users array is empty
+    const userIndex = userGame.users.findIndex((user) => user.username === player.username)
 
     //Found a user
-    if(index !== -1){
+    if(userIndex !== -1){
         //start index and how many we want to remove
-        return userGame.users.splice(index, 1)[0]
+        userGame.users.splice(userIndex, 1)[0]
+    }
+
+    //TODO: Add logic to check if users array is empty
+    if(userGame.users.length === 0){
+        games.splice(games.findIndex((game) => {game.room === userGame.room}), 1)[0]
     }
 }
 
 //Set user values from the UI (Y/N and numYes)
-const setUserValues = () => {
-
+const setUserValues = (player, optionYN, numY) => {
+    const game = games.find((game) => {
+        return game.room === player.room
+    })
+    game.users.map(obj => {
+        if(obj.username == player.username){
+            obj.optionYN = optionYN
+            obj.numY = numY;
+        }
+        return obj
+    })
 }
 
 //Set all values to null
-const clearAllUserValues = () => {
-
+const clearAllUserValues = (room) => {
+    const game = games.find((game) => {return game.room === room})
+    if(game){
+        console.log("here")
+        game.users.map((user)=> {
+                user.optionYN = null;
+                user.numY = null;
+                return user
+            })
+    }
 }
 
+//TODO: implement 
+
 //Testing
-// console.log(createNewGame({room:"room", username:"user1"}));
-// console.log(addUserToGame({username: "paul", room: "room2"}))
-// console.log(addUserToGame({username: "paul", room: "room"}))
-// console.log(removeUserFromGame({username: "user1", room: "room"}))
-// console.log("games " + games)
+//console.log(createNewGame({room:"room", username:"user1"}).game);
+//console.log(addUserToGame({username: "paul", room: "room2"}).error)
+//console.log(addUserToGame({username: "paul", room: "room"}).game)
+// console.log("REMOVING")
+// removeUserFromGame({username: "user1", room: "room"})
+// removeUserFromGame({username: "paul", room: "room"})
+// console.log(games[0].users)
+//Test 'setUserValues'
+// setUserValues({username:"paul", room:"room"}, 'Y', 4)
+// console.log(games[0].users)
+// Test clearAllUserValues
+//clearAllUserValues("room");
+//console.log(games[0].users)
+
+
 
 module.exports = {
     createNewGame,
     addUserToGame,
-    removeUserFromGame
+    removeUserFromGame,
+    setUserValues,
+    clearAllUserValues
 }
