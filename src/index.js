@@ -54,7 +54,9 @@ io.on('connection', (socket) => {
             users: getUsersInRoom(user.room)
         })
 
-        io.to(user.room).emit('getRandomQuestion', getRandomQuestion())
+        io.to(user.room).emit('waiting', {message: "Waiting for game to start..."})
+
+        //io.to(user.room).emit('getRandomQuestion', getRandomQuestion())
 
         callback()
 
@@ -78,7 +80,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on('userInput', ({username, room, optionYN, num}) => {
+        setUserValues({username, room}, optionYN, num )
         console.log(`server received ${username}'s input: ${optionYN} and ${num}`)
+    })
+    socket.on('refreshData', ({room}) => {
+        clearAllUserValues(room)
     })
 })
 

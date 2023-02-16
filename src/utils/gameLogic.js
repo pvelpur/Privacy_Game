@@ -118,7 +118,7 @@ const clearAllUserValues = (room) => {
 // Test clearAllUserValues
 //clearAllUserValues("room");
 //console.log(games[0].users)
-console.log(getRandomQuestion())
+//console.log(getRandomQuestion())
 
 
 module.exports = {

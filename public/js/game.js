@@ -27,6 +27,8 @@ document.querySelector('form.player-input').addEventListener('submit', function 
     socket.emit('userInput', {username, room, optionYN, num})   
 });
 
+//socket.emit('refreshData', {room})
+
 socket.on('message', (message) => {
     alert(message);
 })
@@ -44,6 +46,14 @@ socket.on('getRandomQuestion', ({ID, question}) => {
         question
     })
     document.querySelector('#question').innerHTML = html
+})
+
+socket.on('waiting', ({message}) => {
+    const html = Mustache.render(questionTemplate, {
+        question: message
+    })
+    document.querySelector('#question').innerHTML = html
+    document.getElementById('submit_responses').disabled = true;
 })
 
 //server will listen for new joins
