@@ -14,10 +14,8 @@
 
         </div>
         <div class="game__main">
-            <div class="card">
-                <div class="card-container">
-                    <h3>Do you like Pineapple on Pizza?</h3>
-                </div>
+            <div id="question" class="card">
+                
             </div>
             <form class="player-input">
                 <label>
@@ -29,7 +27,7 @@
                     No
                   </label>
                 <label for="numYes">Enter how many people you think will respond Yes: </label>
-                <input type="number" name="numYes" min="1" max="6" required>
+                <input type="number" name="numYes" min="0" max="6" required>
                 <input type="submit">
             </form>
         </div>
@@ -45,6 +43,11 @@
                 <h5>score:</h5>
             {{/users}}
         </ul>
+    </script>
+    <script id="question-template" type="text/html">
+        <div class="card-container">
+            <h3>{{question}}</h3>
+        </div>
     </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.1/mustache.min.js"></script>

@@ -3,7 +3,7 @@ const http = require('http')
 const path = require('path')
 const socketio = require('socket.io')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
-const { createNewGame, addUserToGame, removeUserFromGame } = require('./utils/gameLogic')
+const { createNewGame, addUserToGame, removeUserFromGame, clearAllUserValues, setUserValues, getRandomQuestion } = require('./utils/gameLogic')
 
 const app = express()
 const server = http.createServer(app)
@@ -53,6 +53,8 @@ io.on('connection', (socket) => {
             room: user.room,
             users: getUsersInRoom(user.room)
         })
+
+        io.to(user.room).emit('getRandomQuestion', getRandomQuestion())
 
         callback()
 

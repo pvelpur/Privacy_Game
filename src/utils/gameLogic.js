@@ -1,5 +1,10 @@
 games = [];
+var questions = require('../../public/resources/Question_Output.json')
 
+
+const getRandomQuestion = () => {
+    return questions[Math.floor(Math.random() * (questions.length))]
+}
 
 const createNewGame = (user) =>{
     const existingGame = games.find((game) => {
@@ -113,7 +118,7 @@ const clearAllUserValues = (room) => {
 // Test clearAllUserValues
 //clearAllUserValues("room");
 //console.log(games[0].users)
-
+console.log(getRandomQuestion())
 
 
 module.exports = {
@@ -121,5 +126,6 @@ module.exports = {
     addUserToGame,
     removeUserFromGame,
     setUserValues,
-    clearAllUserValues
+    clearAllUserValues,
+    getRandomQuestion
 }

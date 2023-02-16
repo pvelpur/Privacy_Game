@@ -6,6 +6,7 @@ const numYes = document.getElementsByName('numYes')
 
 //Templates
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
+const questionTemplate = document.querySelector('#question-template').innerHTML
 
 //Options
 //object destructuring
@@ -36,6 +37,13 @@ socket.on('roomData', ({ room, users }) => {
         users
     })
     document.querySelector('#sidebar').innerHTML = html
+})
+
+socket.on('getRandomQuestion', ({ID, question}) => {
+    const html = Mustache.render(questionTemplate, {
+        question
+    })
+    document.querySelector('#question').innerHTML = html
 })
 
 //server will listen for new joins
