@@ -55,8 +55,12 @@ io.on('connection', (socket) => {
         })
 
         io.to(user.room).emit('waiting', {message: "Waiting for game to start..."})
-
-        //io.to(user.room).emit('getRandomQuestion', getRandomQuestion())
+        
+        socket.on('gameStart', ({room}) => {
+            console.log(room)
+            io.to(room).emit('getRandomQuestion', getRandomQuestion())
+            //io.to(user.room).emit('getRandomQuestion', getRandomQuestion())
+        })
 
         callback()
 
@@ -79,13 +83,15 @@ io.on('connection', (socket) => {
         
     })
 
-    socket.on('userInput', ({username, room, optionYN, num}) => {
+    socket.on('userInput', ({username, room, optionYN, num}, callback) => {
         setUserValues({username, room}, optionYN, num )
-        console.log(`server received ${username}'s input: ${optionYN} and ${num}`)
+        console.log(`server received ${username}'s input in room ${room}: ${optionYN} and ${num}`)
+        callback({success: "User input recorded"})
     })
     socket.on('refreshData', ({room}) => {
         clearAllUserValues(room)
     })
+    
 })
 
 server.listen(port, () => {

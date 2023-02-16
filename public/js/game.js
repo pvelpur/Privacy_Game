@@ -3,6 +3,7 @@ const socket = io()
 //Elements
 const radioOption = document.getElementsByName('QResp')
 const numYes = document.getElementsByName('numYes')
+const startBtn = document.getElementById("StartGame")
 
 //Templates
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
@@ -10,8 +11,13 @@ const questionTemplate = document.querySelector('#question-template').innerHTML
 
 //Options
 //object destructuring
-const {username, room, type} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+var {username, room, type} = Qs.parse(location.search, { ignoreQueryPrefix: true })
+username = username.trim().toLowerCase()
+room = room.trim().toLowerCase()
 
+if(type === 'join'){
+    startBtn.hidden = true;
+}
 
 document.querySelector('form.player-input').addEventListener('submit', function (e) {
 
@@ -24,8 +30,20 @@ document.querySelector('form.player-input').addEventListener('submit', function 
     }
     //console.log(numYes[0].value)
     var num = numYes[0].value
-    socket.emit('userInput', {username, room, optionYN, num})   
+    socket.emit('userInput', {username, room, optionYN, num}, (success) =>{
+        if(success) {
+            document.getElementById('submit_responses').disabled = true;
+        }
+    })   
 });
+
+startBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+    //emit game start event
+    startBtn.hidden=true
+    socket.emit('gameStart', {room})
+    
+})
 
 //socket.emit('refreshData', {room})
 
@@ -46,6 +64,7 @@ socket.on('getRandomQuestion', ({ID, question}) => {
         question
     })
     document.querySelector('#question').innerHTML = html
+    document.getElementById('submit_responses').disabled = false;
 })
 
 socket.on('waiting', ({message}) => {

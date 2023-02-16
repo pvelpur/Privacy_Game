@@ -6,6 +6,8 @@ const getRandomQuestion = () => {
     return questions[Math.floor(Math.random() * (questions.length))]
 }
 
+console.log(getRandomQuestion())
+
 const createNewGame = (user) =>{
     const existingGame = games.find((game) => {
         return game.room === user.room

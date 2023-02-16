@@ -17,6 +17,7 @@
             <div id="question" class="card">
                 
             </div>
+            <button id="StartGame">Start</button>
             <form class="player-input">
                 <label>
                     <input type="radio" name="QResp" value="yes" required>
@@ -30,6 +31,7 @@
                 <input type="number" name="numYes" min="0" max="6" required>
                 <input type="submit" id="submit_responses">
             </form>
+            
         </div>
     </div>
 
@@ -46,7 +48,7 @@
     </script>
     <script id="question-template" type="text/html">
         <div class="card-container">
-            <h3>{{question}}</h3>
+            <h3 id="mainText">{{question}}</h3>
         </div>
     </script>
 
