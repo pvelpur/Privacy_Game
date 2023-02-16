@@ -4,6 +4,7 @@ const socket = io()
 const radioOption = document.getElementsByName('QResp')
 const numYes = document.getElementsByName('numYes')
 const startBtn = document.getElementById("StartGame")
+const nextRoundBtn = document.getElementById("NextRound")
 
 //Templates
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
@@ -18,6 +19,7 @@ room = room.trim().toLowerCase()
 if(type === 'join'){
     startBtn.hidden = true;
 }
+nextRoundBtn.hidden=true;
 
 document.querySelector('form.player-input').addEventListener('submit', function (e) {
 

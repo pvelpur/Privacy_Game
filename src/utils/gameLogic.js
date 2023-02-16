@@ -24,7 +24,9 @@ const createNewGame = (user) =>{
             score: 0,
             numY: null,
             optionYN: null
-        }]
+        }],
+        totalYes: 0,
+        totalResponses: 0
     }
     games.push(game);
     return {game}
@@ -82,6 +84,10 @@ const setUserValues = (player, optionYN, numY) => {
     const game = games.find((game) => {
         return game.room === player.room
     })
+    if(optionYN ==='yes'){
+        game.totalYes+=1
+    }
+    game.totalResponses+=1
     game.users.map(obj => {
         if(obj.username == player.username){
             obj.optionYN = optionYN
@@ -95,32 +101,71 @@ const setUserValues = (player, optionYN, numY) => {
 const clearAllUserValues = (room) => {
     const game = games.find((game) => {return game.room === room})
     if(game){
-        console.log("here")
+        //console.log("here")
         game.users.map((user)=> {
                 user.optionYN = null;
                 user.numY = null;
                 return user
             })
+        game.totalYes=0
+        game.totalResponses=0
     }
 }
 
-//TODO: implement 
+//function to check if all user input present
+const checkAllUserInput = (room) => {
+    const game = games.find((game) => {return game.room === room})
+    if(game.users.length === game.totalResponses){
+        return true
+    }
+    return false
+
+}
+
+//Function to update player score
+const updatePlayerScores = (room) => {
+    const game = games.find((game) => {return game.room === room})
+    game.users.map((user)=> {
+        if(user.numY === game.totalYes){
+            user.score+=2
+        }
+        else if(user.numY === game.totalYes+1 || user.numY===game.totalYes-1){
+            user.score+=1
+        }
+        else{
+            //no score update
+        }
+        return user
+    })
+}
 
 //Testing
 //console.log(createNewGame({room:"room", username:"user1"}).game);
 //console.log(addUserToGame({username: "paul", room: "room2"}).error)
-//console.log(addUserToGame({username: "paul", room: "room"}).game)
+// console.log(addUserToGame({username: "paul", room: "room"}).game)
 // console.log("REMOVING")
 // removeUserFromGame({username: "user1", room: "room"})
 // removeUserFromGame({username: "paul", room: "room"})
 // console.log(games[0].users)
 //Test 'setUserValues'
-// setUserValues({username:"paul", room:"room"}, 'Y', 4)
-// console.log(games[0].users)
-// Test clearAllUserValues
-//clearAllUserValues("room");
-//console.log(games[0].users)
+// setUserValues({username:"paul", room:"room"}, 'no', 0)
+// console.log(games[0])
+//Test get Random Question
 //console.log(getRandomQuestion())
+
+//Test all User input received function
+// setUserValues({username:"user1", room:"room"}, 'yes', 1)
+// console.log(games[0])
+// console.log(checkAllUserInput('room'))
+
+//test update player score function
+// updatePlayerScores('room')
+// console.log(games[0])
+
+// Test clearAllUserValues
+// clearAllUserValues("room");
+// console.log(games[0])
+
 
 
 module.exports = {
@@ -129,5 +174,7 @@ module.exports = {
     removeUserFromGame,
     setUserValues,
     clearAllUserValues,
-    getRandomQuestion
+    getRandomQuestion,
+    checkAllUserInput,
+    updatePlayerScores
 }

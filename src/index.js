@@ -3,7 +3,11 @@ const http = require('http')
 const path = require('path')
 const socketio = require('socket.io')
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users')
-const { createNewGame, addUserToGame, removeUserFromGame, clearAllUserValues, setUserValues, getRandomQuestion } = require('./utils/gameLogic')
+const { createNewGame, addUserToGame, 
+        removeUserFromGame, clearAllUserValues, 
+        setUserValues, getRandomQuestion,
+        updatePlayerScores, checkAllUserInput
+    } = require('./utils/gameLogic')
 
 const app = express()
 const server = http.createServer(app)
@@ -87,6 +91,10 @@ io.on('connection', (socket) => {
         setUserValues({username, room}, optionYN, num )
         console.log(`server received ${username}'s input in room ${room}: ${optionYN} and ${num}`)
         callback({success: "User input recorded"})
+        // if(checkAllUserInput(room)){
+        //     updatePlayerScores(room)
+        //     console.log("Scores Updated")
+        // }
     })
     socket.on('refreshData', ({room}) => {
         clearAllUserValues(room)
