@@ -79,6 +79,9 @@ socket.on('waiting', ({message}) => {
     const html = Mustache.render(questionTemplate, {
         question: message
     })
+    if(type === 'create'){
+        startBtn.hidden = false;
+    }
     document.querySelector('#question').innerHTML = html
     document.getElementById('submit_responses').disabled = true;
 })

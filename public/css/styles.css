@@ -145,8 +145,8 @@ button:disabled {
 
 .card {
     margin: 25px;
-    width: 350px;
-    height: 200px;
+    width: 500px;
+    height: 500px;
     outline: dashed 4px black;
     display: flex;
     align-items: center;
@@ -157,4 +157,11 @@ button:disabled {
     margin: 0 auto;
 }
 
-
+/* Form styles */ 
+#player-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 50px;
+  }

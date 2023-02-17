@@ -41,7 +41,6 @@ const addUserToGame = (user) => {
     }
     //Check existing users in the room (max = 6)
     numUsersInRoom = foundGame.users.length
-    //console.log("NUM USERS " + numUsersInRoom)
     if(numUsersInRoom === 6){
         return {
             error: 'Room is full'
@@ -135,7 +134,7 @@ const updatePlayerScores = (room) => {
         }
         return user
     })
-    console.log(game.users)
+    
     return game.totalYes
 }
 
