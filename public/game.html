@@ -43,7 +43,7 @@
         <ul class="users">
             {{#users}}
                 <li>{{username}}</li>
-                <h5>score:</h5>
+                <h5>score: {{score}}</h5>
             {{/users}}
         </ul>
     </script>
@@ -52,6 +52,19 @@
             <h3 id="mainText">{{question}}</h3>
         </div>
     </script>
+    <script id="scores-template" type="text/html">
+        <div class="card-container">
+            <h3 id="mainText">Num Yes: {{totalYes}}</h3>
+            <h2>Scores:</h2>
+            <ul class="scores">
+                {{#scores}}
+                    <li>{{username}}: {{score}}</li>
+                {{/scores}}
+            </ul>
+        </div>
+    </script>
+
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.1/mustache.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.11.0/qs.min.js"></script>

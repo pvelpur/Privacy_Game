@@ -6,8 +6,10 @@ const { addUser, removeUser, getUser, getUsersInRoom } = require('./utils/users'
 const { createNewGame, addUserToGame, 
         removeUserFromGame, clearAllUserValues, 
         setUserValues, getRandomQuestion,
-        updatePlayerScores, checkAllUserInput
+        updatePlayerScores, checkAllUserInput,
+        getPlayerScores, getPlayersInRoom
     } = require('./utils/gameLogic')
+const { get } = require('https')
 
 const app = express()
 const server = http.createServer(app)
@@ -27,6 +29,7 @@ io.on('connection', (socket) => {
         if(error) {
             return callback(error)
         }
+        var currGame = null
         if(type === 'create'){
             //add new game with error checking
             console.log("create new game initiated")
@@ -34,6 +37,7 @@ io.on('connection', (socket) => {
             if(error){
                 return callback(error)
             }
+            currGame=game;
         }
         else if(type === 'join'){
             //add User To Existing Game with error checking
@@ -42,6 +46,7 @@ io.on('connection', (socket) => {
             if(error){
                 return callback(error) //could be game is full or game not found
             }
+            currGame=game;
         }
         else{
             return callback({error: 'Unknown Error please retry'})
@@ -55,15 +60,14 @@ io.on('connection', (socket) => {
         socket.broadcast.to(user.room).emit('message', `${user.username} has joined!`)
         io.to(user.room).emit('roomData', {
             room: user.room,
-            users: getUsersInRoom(user.room)
+            //users: getUsersInRoom(user.room)
+            users: currGame.users
         })
 
         io.to(user.room).emit('waiting', {message: "Waiting for game to start..."})
         
         socket.on('gameStart', ({room}) => {
-            console.log(room)
             io.to(room).emit('getRandomQuestion', getRandomQuestion())
-            //io.to(user.room).emit('getRandomQuestion', getRandomQuestion())
         })
 
         callback()
@@ -91,13 +95,25 @@ io.on('connection', (socket) => {
         setUserValues({username, room}, optionYN, num )
         console.log(`server received ${username}'s input in room ${room}: ${optionYN} and ${num}`)
         callback({success: "User input recorded"})
-        // if(checkAllUserInput(room)){
-        //     updatePlayerScores(room)
-        //     console.log("Scores Updated")
-        // }
+        //console.log(checkAllUserInput(room))
+        if(checkAllUserInput(room)){
+            var totalYes = updatePlayerScores(room)
+            //console.log("Scores Updated" + " " + totalYes + " " + room)
+            io.to(room).emit("scoresUpdated", {
+                totalYes,
+                scores: getPlayerScores(room)
+            })
+            io.to(room).emit('roomData', {
+                room,
+                //users: getUsersInRoom(user.room)
+                users: getPlayersInRoom(room)
+            })
+        }
     })
     socket.on('refreshData', ({room}) => {
         clearAllUserValues(room)
+        console.log("data has been refreshed")
+        io.to(room).emit('getRandomQuestion', getRandomQuestion())
     })
     
 })

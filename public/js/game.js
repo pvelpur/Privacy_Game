@@ -9,6 +9,7 @@ const nextRoundBtn = document.getElementById("NextRound")
 //Templates
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML
 const questionTemplate = document.querySelector('#question-template').innerHTML
+const scoresTemplate = document.querySelector('#scores-template').innerHTML
 
 //Options
 //object destructuring
@@ -35,6 +36,9 @@ document.querySelector('form.player-input').addEventListener('submit', function 
     socket.emit('userInput', {username, room, optionYN, num}, (success) =>{
         if(success) {
             document.getElementById('submit_responses').disabled = true;
+            for (var radio in document.getElementsByName('radio')){
+                radio.checked = false
+            }
         }
     })   
 });
@@ -45,6 +49,12 @@ startBtn.addEventListener('click', (e) => {
     startBtn.hidden=true
     socket.emit('gameStart', {room})
     
+})
+
+nextRoundBtn.addEventListener('click', (e) => {
+    e.preventDefault()
+    nextRoundBtn.hidden=true
+    socket.emit('refreshData', {room})
 })
 
 //socket.emit('refreshData', {room})
@@ -75,6 +85,21 @@ socket.on('waiting', ({message}) => {
     })
     document.querySelector('#question').innerHTML = html
     document.getElementById('submit_responses').disabled = true;
+})
+
+//TODO: finish this part
+socket.on('scoresUpdated', ({totalYes, scores}) => {
+    //console.log('scores have been updated')
+    console.log(scores)
+    //console.log(totalYes)
+    const html = Mustache.render(scoresTemplate, {
+         totalYes,
+         scores
+     })
+    document.querySelector('#question').innerHTML = html
+    if(type === 'create'){
+        nextRoundBtn.hidden=false;
+    }
 })
 
 //server will listen for new joins

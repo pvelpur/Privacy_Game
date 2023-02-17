@@ -64,3 +64,7 @@ module.exports = {
     getUser,
     getUsersInRoom
 }
+
+// console.log(addUser({id:1, username:'prith', room:'room'}))
+// console.log(addUser({id:2, username:'prith2', room:'room'}))
+// console.log(getUsersInRoom('room'))
