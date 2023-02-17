@@ -36,9 +36,7 @@ document.querySelector('form.player-input').addEventListener('submit', function 
     socket.emit('userInput', {username, room, optionYN, num}, (success) =>{
         if(success) {
             document.getElementById('submit_responses').disabled = true;
-            for (var radio in document.getElementsByName('radio')){
-                radio.checked = false
-            }
+            document.getElementById('player-input').reset()
         }
     })   
 });
@@ -56,8 +54,6 @@ nextRoundBtn.addEventListener('click', (e) => {
     nextRoundBtn.hidden=true
     socket.emit('refreshData', {room})
 })
-
-//socket.emit('refreshData', {room})
 
 socket.on('message', (message) => {
     alert(message);
@@ -89,9 +85,6 @@ socket.on('waiting', ({message}) => {
 
 //TODO: finish this part
 socket.on('scoresUpdated', ({totalYes, scores}) => {
-    //console.log('scores have been updated')
-    console.log(scores)
-    //console.log(totalYes)
     const html = Mustache.render(scoresTemplate, {
          totalYes,
          scores

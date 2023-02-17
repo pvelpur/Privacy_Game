@@ -21,7 +21,7 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.use(express.static(publicDirectoryPath))
 
 io.on('connection', (socket) => {
-    console.log('New WebSocket connection')
+    //console.log('New WebSocket connection')
 
     socket.on('join', ({username, room, type}, callback) => {
         const { error, user } = addUser({ id: socket.id, username, room})
@@ -32,7 +32,6 @@ io.on('connection', (socket) => {
         var currGame = null
         if(type === 'create'){
             //add new game with error checking
-            console.log("create new game initiated")
             const {error, game} = createNewGame(user)
             if(error){
                 return callback(error)
@@ -41,7 +40,6 @@ io.on('connection', (socket) => {
         }
         else if(type === 'join'){
             //add User To Existing Game with error checking
-            console.log("Join new game initiated")
             const {error, game} = addUserToGame(user)
             if(error){
                 return callback(error) //could be game is full or game not found
@@ -93,12 +91,10 @@ io.on('connection', (socket) => {
 
     socket.on('userInput', ({username, room, optionYN, num}, callback) => {
         setUserValues({username, room}, optionYN, num )
-        console.log(`server received ${username}'s input in room ${room}: ${optionYN} and ${num}`)
+        //console.log(`server received ${username}'s input in room ${room}: ${optionYN} and ${num}`)
         callback({success: "User input recorded"})
-        //console.log(checkAllUserInput(room))
         if(checkAllUserInput(room)){
             var totalYes = updatePlayerScores(room)
-            //console.log("Scores Updated" + " " + totalYes + " " + room)
             io.to(room).emit("scoresUpdated", {
                 totalYes,
                 scores: getPlayerScores(room)
@@ -112,7 +108,7 @@ io.on('connection', (socket) => {
     })
     socket.on('refreshData', ({room}) => {
         clearAllUserValues(room)
-        console.log("data has been refreshed")
+        //console.log("data has been refreshed")
         io.to(room).emit('getRandomQuestion', getRandomQuestion())
     })
     
